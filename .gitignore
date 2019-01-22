@@ -1,0 +1,10 @@
+# git rm -r --cached .
+
+# Ignore data folders
+extracted_data/
+
+# Ignore MacOS folders and files
+.ipynb_checkpoints/
+.idea/
+__pycache__/
+.DS_Store
