@@ -10,19 +10,7 @@ EOt = u"</st>"
 UNKt = u"<UNKt>"
 
 
-def load_idf(fname):
-    idf = dict()
-    with open(fname, 'r') as f:
-        next(f)
-        for line in f:
-            p = line.strip().split()
-            # assert len(p)== s+1
-            w = "".join(p[0])
-            idf[w] = float(p[1])
-    return idf
-
-
-def load_embs(emb_file, idf=dict()):
+def load_embs(emb_file):
     with open(emb_file, 'r') as f:
         vectors = []
         id2wd = {}
@@ -31,7 +19,7 @@ def load_embs(emb_file, idf=dict()):
             if len(vals) == 2:
                 continue
             wd = vals[0]
-            val = [float(x)*idf.get(wd, 1.0) for x in vals[1:]]
+            val = [float(x) for x in vals[1:]]
             if wd in [PADt, SOt, EOt, UNKt] or sum(val) == 0:
                 continue
             id2wd[len(id2wd)] = wd
@@ -62,12 +50,10 @@ if __name__ == "__main__":
     """
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument('--idf_file', default='extracted_data/idf.txt', type=str)
-    parser.add_argument('--emb_file', default='extracted_data/w2v_yelp100.pro.vec', type=str)
+    parser.add_argument('--emb_file', default='../w2v_yelp100.pro.vec', type=str)
     parser.add_argument('--topic_file', default='extracted_data/dtopic_emb.txt', type=str)
     parser.add_argument('--N', default=50, type=int)
     args = parser.parse_args()
-    idf = load_idf(args.idf_file)
-    ivocab, W = load_embs(args.emb_file, idf)
+    ivocab, W = load_embs(args.emb_file)
     cosine_distance(W, ivocab, args.topic_file, args.N)
 

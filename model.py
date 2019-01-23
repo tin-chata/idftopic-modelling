@@ -27,7 +27,7 @@ class Autoencoder_model(object):
         word_HPs = [len(self.args.vocab.w2i), self.args.word_dim, self.args.word_pretrained, self.args.word_drop_rate,
                     self.args.word_zero_padding, self.args.grad_flag, self.args.word_nn_out_dim]
 
-        self.model = Autoencoder(HPs=word_HPs, kmean_file=self.args.kmean_file).to(self.device)
+        self.model = Autoencoder(HPs=word_HPs, idf_embs=self.args.idf_embs, kmean_file=self.args.kmean_file).to(self.device)
 
         if args.optimizer.lower() == "adamax":
             self.optimizer = optim.Adamax(self.model.parameters(), lr=self.args.lr)
@@ -215,7 +215,7 @@ if __name__ == '__main__':
 
     argparser.add_argument("--shutdown", action='store_true', default=False, help="shutdown Flag (default False)")
 
-    argparser.add_argument("--sent_limit", type=int, default=100000, help="Limit the number of lines to train")
+    argparser.add_argument("--sent_limit", type=int, default=-1, help="Limit the number of lines to train")
 
     args = argparser.parse_args()
 
