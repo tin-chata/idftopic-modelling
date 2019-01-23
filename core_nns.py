@@ -89,7 +89,7 @@ class Autoencoder(nn.Module):
             # kmean_centroids = [nn_out_dim, emb_dim]
             kmean_centroids = Autoencoder.load_weight_init(kmean_file)
             # encoder.weight = [nn_out_dim, emb_dim]
-            self.encoder.weight.data.copy_(torch.from_numpy(kmean_centroids))
+            # self.encoder.weight.data.copy_(torch.from_numpy(kmean_centroids))
             # decoder.weight = [emb_dim, nn_out_dim]
             self.decoder.weight.data.copy_(torch.from_numpy(kmean_centroids.transpose()))
 

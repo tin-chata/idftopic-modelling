@@ -40,6 +40,10 @@ class Autoencoder_model(object):
         else:
             self.optimizer = optim.SGD(self.model.parameters(), lr=self.args.lr, momentum=0.9)
 
+        self.id2topic = {}
+        for i in range(self.args.word_nn_out_dim):
+            self.id2topic[i] = "topic_%d" % i
+
     def train_batch(self, train_data):
         clip_rate = self.args.clip
         chunk_size = self.args.batch_size * (self.args.neg_samples + 1)
@@ -115,13 +119,11 @@ class Autoencoder_model(object):
                 self.lr_decay(epoch)
 
         word_emb, enc_emb, dec_emb = self.model.get_embs()
-        id2topic = {}
-        for i in range(enc_emb.shape[0]):
-            id2topic[i] = "topic_%d" % i
-
-        Embeddings.save_embs(id2topic, dec_emb.transpose(), os.path.join(args.model_dir, self.args.dtopic_emb_file))
-        Embeddings.save_embs(id2topic, enc_emb, os.path.join(args.model_dir, self.args.etopic_emb_file))
-        Embeddings.save_embs(self.args.vocab.i2w, word_emb, os.path.join(args.model_dir, self.args.tuned_word_emb_file))
+        Embeddings.save_embs(self.id2topic, dec_emb.transpose(),
+                             os.path.join(args.model_dir, self.args.dtopic_emb_file))
+        Embeddings.save_embs(self.id2topic, enc_emb, os.path.join(args.model_dir, self.args.etopic_emb_file))
+        Embeddings.save_embs(self.args.vocab.i2w, word_emb,
+                             os.path.join(args.model_dir, self.args.tuned_word_emb_file))
         return
 
     @staticmethod
