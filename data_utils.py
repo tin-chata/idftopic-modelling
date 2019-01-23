@@ -342,7 +342,7 @@ class Embeddings:
 
 if __name__ == "__main__":
     filename = "/media/data/restaurants/yelp_dataset/processed/extracted_rev/yelp_data_rev.pro.txt"
-    idf_file = "./extracted_data/idf.txt"
+    idf_file = "./idf.txt"
     vocab = Vocab(wl_th=None, wcutoff=5)
     vocab.build(filename, idf_file, firstline=False, limit=100000)
 
@@ -369,5 +369,4 @@ if __name__ == "__main__":
         noise_tensor = data_tensor[:, 1:, :]
         break
 
-    scale = np.sqrt(3.0 / 1)
-    trained_vectors = Embeddings.get_W("extracted_data/idf.txt", 1, vocab.w2i, scale)
+    idf_embs = Embeddings.get_W(idf_file, 1, vocab.w2i, 0)

@@ -131,8 +131,7 @@ class Autoencoder_model(object):
             os.mkdir(args.model_dir)
         vocab = Vocab(wl_th=args.wl_th, wcutoff=args.wcutoff)
 
-        idf_file = os.path.join(args.model_dir, args.idf_file)
-        vocab.build(fname=args.train_file, idf_file=idf_file, firstline=False, limit=args.sent_limit)
+        vocab.build(fname=args.train_file, idf_file=args.idf_file, firstline=False, limit=args.sent_limit)
         args.vocab = vocab
         if args.word_emb_file is not None:
             scale = np.sqrt(3.0 / args.word_dim)
@@ -140,8 +139,8 @@ class Autoencoder_model(object):
         else:
             args.word_pretrained = None
 
-        if os.path.exists(idf_file):
-            args.idf_embs = Embeddings.get_W(idf_file, 1, vocab.w2i, 3.0)
+        if os.path.exists(args.idf_file):
+            args.idf_embs = Embeddings.get_W(args.idf_file, 1, vocab.w2i, 3.0)
         else:
             args.idf_embs = None
 
@@ -173,7 +172,7 @@ if __name__ == '__main__':
 
     argparser.add_argument("--start_end", action='store_true', default=False, help="Start-end padding flag")
 
-    argparser.add_argument("--idf_file", type=str, help="tfidf file", default="idf.txt")
+    argparser.add_argument("--idf_file", type=str, help="tfidf file", default="./idf.txt")
 
     argparser.add_argument("--word_emb_file", type=str, help="Word embedding file", default=None)
 

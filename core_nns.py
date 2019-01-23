@@ -93,7 +93,6 @@ class Autoencoder(nn.Module):
             # decoder.weight = [emb_dim, nn_out_dim]
             self.decoder.weight.data.copy_(torch.from_numpy(kmean_centroids.transpose()))
 
-
     @staticmethod
     def load_weight_init(kmean_file):
         kmean_centroids = np.loadtxt(kmean_file, dtype="float32")
@@ -113,7 +112,7 @@ class Autoencoder(nn.Module):
         emb_idf = self.norm_idf(self.idf_layer(inputs))
         # emb_idf = [batch_size, sent_length, 1]
         emb_word = emb_word * emb_idf
-        emb_sent = emb_word.mean(dim=1)
+        emb_sent = emb_word.sum(dim=1)
         # emb_sent = [batch_size, emb_dim]
         emb_topic = self.encoder(emb_sent)
         topic_class = self.norm_layer(emb_topic)
@@ -131,7 +130,7 @@ class Autoencoder(nn.Module):
         # emb_idf = [batch_size, sent_length, 1]
         emb_word = emb_word * emb_idf
 
-        emb_sent = emb_word.mean(dim=1, keepdim=True)
+        emb_sent = emb_word.sum(dim=1, keepdim=True)
         # emb_sent = [batch_size, 1, emb_dim]
         sent_length = emb_word.size(1)
         emb_sent_ex = emb_sent.expand(-1, sent_length, -1).contiguous()
@@ -159,7 +158,7 @@ class Autoencoder(nn.Module):
         # emb_idf = [batch_size, sent_length, 1]
         emb_word = emb_word * emb_idf
 
-        emb_sent = emb_word.mean(dim=1, keepdim=True)
+        emb_sent = emb_word.sum(dim=1, keepdim=True)
         # emb_sent = [batch_size, 1, emb_dim]
         sent_length = emb_word.size(1)
         emb_sent_ex = emb_sent.expand(-1, sent_length, -1).contiguous()
@@ -185,7 +184,7 @@ class Autoencoder(nn.Module):
         emb_idf = self.norm_idf(self.idf_layer(noises))
         # emb_idf = [batch_size, sampling, sent_length, 1]
         emb_word = emb_word * emb_idf
-        emb_noise = emb_word.mean(dim=2)
+        emb_noise = emb_word.sum(dim=2)
         # emb_noise = [batch_size, sampling, emb_dim]
         return emb_noise
 
@@ -228,7 +227,7 @@ if __name__ == "__main__":
     Data2tensor.set_randseed(1234)
     use_cuda = torch.cuda.is_available()
     filename = "/media/data/restaurants/yelp_dataset/processed/extracted_rev/yelp_data_rev.pro.txt"
-    idf_file = "./extracted_data/idf.txt"
+    idf_file = "./idf.txt"
 
     vocab = Vocab(wl_th=None, wcutoff=5)
     vocab.build(filename, idf_file=idf_file, firstline=False, limit=100000)
@@ -263,7 +262,7 @@ if __name__ == "__main__":
     nn_out_dim = 10
     HPs = [emb_size, emb_dim, pre_embs, emb_drop_rate, emb_zero_padding, grad_flag, nn_out_dim]
 
-    idf_embs = Embeddings.get_W("./extracted_data/idf.txt", 1, vocab.w2i, np.sqrt(3.0 / 1))
+    idf_embs = Embeddings.get_W(idf_file, 1, vocab.w2i, 0)
 
     topic_encoder = Autoencoder(HPs=HPs, idf_embs=idf_embs, kmean_file='./kmean_10centroids.txt')
     emb_sent, trans_sent, emb_noise = topic_encoder(inp_tensor, noise_tensor)
