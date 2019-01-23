@@ -140,7 +140,7 @@ class Autoencoder_model(object):
             args.word_pretrained = None
 
         if os.path.exists(args.idf_file):
-            args.idf_embs = Embeddings.get_W(args.idf_file, 1, vocab.w2i, 3.0)
+            args.idf_embs = Embeddings.get_W(args.idf_file, 1, vocab.w2i, 0)
         else:
             args.idf_embs = None
 
@@ -214,7 +214,7 @@ if __name__ == '__main__':
 
     argparser.add_argument("--shutdown", action='store_true', default=False, help="shutdown Flag (default False)")
 
-    argparser.add_argument("--sent_limit", type=int, default=10000, help="Limit the number of lines to train")
+    argparser.add_argument("--sent_limit", type=int, default=100000, help="Limit the number of lines to train")
 
     args = argparser.parse_args()
 
