@@ -140,6 +140,10 @@ class Autoencoder_model(object):
             args.word_pretrained = None
 
         if os.path.exists(args.idf_file):
+<<<<<<< HEAD
+=======
+            print("Load idf file ...") 
+>>>>>>> ad34390967ed40b24031590e8d95d8817c0b9c99
             args.idf_embs = Embeddings.get_W(args.idf_file, 1, vocab.w2i, 0)
         else:
             args.idf_embs = None
