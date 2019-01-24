@@ -1,5 +1,6 @@
 # git rm -r --cached .
 
+
 # Ignore data folders
 backup/
 extracted_data/
@@ -9,3 +10,4 @@ extracted_data/
 .idea/
 __pycache__/
 .DS_Store
+
