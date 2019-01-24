@@ -181,10 +181,10 @@ class Autoencoder(nn.Module):
         # auxiliary_embs = [batch_size, sampling, sent_length, aux_dim]
         emb_word = self.emb_layer(noises, auxiliary_embs)
         # emb_word = [batch_size, sampling, sent_length, emb_dim]
-        emb_idf = self.norm_idf(self.idf_layer(noises))
+        # emb_idf = self.norm_idf(self.idf_layer(noises))
         # emb_idf = [batch_size, sampling, sent_length, 1]
-        emb_word = emb_word * emb_idf
-        emb_noise = emb_word.sum(dim=2)
+        # emb_word = emb_word * emb_idf
+        emb_noise = emb_word.mean(dim=2)
         # emb_noise = [batch_size, sampling, emb_dim]
         return emb_noise
 
